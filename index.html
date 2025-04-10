@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login & Signup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.2);
+      animation: fadeIn 1s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .input-group {
+      margin: 15px 0;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .input-group input::placeholder {
+      color: #eee;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      color: #764ba2;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #f0f0f0;
+    }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 15px;
+      color: #eee;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .toggle-link:hover {
+      color: #fff;
+    }
+
+    .animation {
+      width: 100px;
+      margin: 0 auto 20px;
+    }
+
+    .strength {
+      font-size: 0.8rem;
+      color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="form-container">
+  <div class="animation">
+    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" loop autoplay></lottie-player>
+  </div>
+  <h2 id="form-title">Login</h2>
+
+  <div class="input-group">
+    <input type="email" placeholder="Email" id="email" required />
+  </div>
+  <div class="input-group">
+    <input type="password" placeholder="Password" id="password" required oninput="checkStrength(this.value)" />
+    <div class="strength" id="strength-text"></div>
+  </div>
+  <div class="input-group" id="confirm-group" style="display:none;">
+    <input type="password" placeholder="Confirm Password" id="confirm-password" />
+  </div>
+
+  <button class="btn" onclick="handleSubmit()">Submit</button>
+
+  <div class="toggle-link" onclick="toggleForm()">Don't have an account? Sign up</div>
+</div>
+
+<script>
+  let isSignup = false;
+
+  function toggleForm() {
+    isSignup = !isSignup;
+    document.getElementById("form-title").textContent = isSignup ? "Sign Up" : "Login";
+    document.querySelector(".toggle-link").textContent = isSignup ? "Already have an account? Login" : "Don't have an account? Sign up";
+    document.getElementById("confirm-group").style.display = isSignup ? "block" : "none";
+  }
+
+  function checkStrength(password) {
+    const strengthText = document.getElementById("strength-text");
+    let strength = "";
+
+    if (password.length > 8 && /[A-Z]/.test(password) && /\d/.test(password)) {
+      strength = "Strong Password 💪";
+    } else if (password.length >= 6) {
+      strength = "Medium Strength 👀";
+    } else {
+      strength = "Too Weak 😢";
+    }
+
+    strengthText.textContent = strength;
+  }
+
+  function handleSubmit() {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+    const confirmPass = document.getElementById("confirm-password").value;
+
+    if (isSignup && pass !== confirmPass) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    if (!email || !pass) {
+      alert("Please fill all fields!");
+      return;
+    }
+
+    alert(isSignup ? "Account Created 🎉" : "Welcome Back! 👋");
+  }
+</script>
+
+</body>
+</html>
