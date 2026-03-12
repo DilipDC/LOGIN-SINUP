@@ -1,184 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login & Signup</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-   <script type="module" src="fier.js"></script>
-
-
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-
-
-  <style>
-    * {
-      margin: 0; padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    body {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(15px);
-      border-radius: 20px;
-      padding: 40px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.2);
-      animation: fadeIn 1s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .container h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: white;
-    }
-
-    .input-group {
-      margin: 15px 0;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 12px 15px;
-      border: none;
-      border-radius: 10px;
-      outline: none;
-      background: rgba(255, 255, 255, 0.3);
-      color: #fff;
-      font-size: 1rem;
-    }
-
-    .input-group input::placeholder {
-      color: #eee;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      margin-top: 20px;
-      background: #ffffff;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      color: #764ba2;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .btn:hover {
-      background: #f0f0f0;
-    }
-
-    .toggle-link {
-      text-align: center;
-      margin-top: 15px;
-      color: #eee;
-      cursor: pointer;
-      transition: color 0.3s;
-    }
-
-    .toggle-link:hover {
-      color: #fff;
-    }
-
-    .animation {
-      width: 100px;
-      margin: 0 auto 20px;
-    }
-
-    .strength {
-      font-size: 0.8rem;
-      color: lightgreen;
-    }
-  </style>
+<title>Auth API Test</title>
+<style>
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px;
+}
+input,button{
+padding:10px;
+margin:5px;
+border-radius:5px;
+border:none;
+}
+button{
+background:#6366f1;
+color:white;
+cursor:pointer;
+}
+</style>
 </head>
+
 <body>
 
-<div class="container" id="form-container">
-  <div class="animation">
-    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" loop autoplay></lottie-player>
-  </div>
-  <h2 id="form-title">Login</h2>
-      
-          <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
+<h1>ULTRA Auth API Test</h1>
 
+<h2>Signup</h2>
+<input id="name" placeholder="Full Name"><br>
+<input id="email" placeholder="Email"><br>
+<input id="password" placeholder="Password"><br>
+<input id="dob" placeholder="DOB (YYYY-MM-DD)"><br>
+<input id="gender" placeholder="Gender"><br>
 
+<button onclick="signup()">Signup</button>
 
-  <div class="input-group">
-    <input type="email" placeholder="Email" id="email" required />
-  </div>
-  <div class="input-group">
-    <input type="password" placeholder="Password" id="password" required oninput="checkStrength(this.value)" />
-    <div class="strength" id="strength-text"></div>
-  </div>
-  <div class="input-group" id="confirm-group" style="display:none;">
-    <input type="password" placeholder="Confirm Password" id="confirm-password" />
-  </div>
+<h2>Verify OTP</h2>
+<input id="otp_email" placeholder="Email"><br>
+<input id="otp" placeholder="OTP"><br>
+<button onclick="verify()">Verify</button>
 
-  <button class="btn" onclick="handleSubmit()">Submit</button>
+<h2>Login</h2>
+<input id="login_email" placeholder="Email"><br>
+<input id="login_password" placeholder="Password"><br>
+<button onclick="login()">Login</button>
 
-  <div class="toggle-link" onclick="toggleForm()">Don't have an account? Sign up</div>
-</div>
+<h2>Google Login</h2>
+<button onclick="googleLogin()">Login with Google</button>
+
+<h3 id="result"></h3>
 
 <script>
-  let isSignup = false;
 
-  function toggleForm() {
-    isSignup = !isSignup;
-    document.getElementById("form-title").textContent = isSignup ? "Sign Up" : "Login";
-    document.querySelector(".toggle-link").textContent = isSignup ? "Already have an account? Login" : "Don't have an account? Sign up";
-    document.getElementById("confirm-group").style.display = isSignup ? "block" : "none";
-  }
+const API = "https://loginpage12.pythonanywhere.com"
 
-  function checkStrength(password) {
-    const strengthText = document.getElementById("strength-text");
-    let strength = "";
+function signup(){
 
-    if (password.length > 8 && /[A-Z]/.test(password) && /\d/.test(password)) {
-      strength = "Strong Password 💪";
-    } else if (password.length >= 6) {
-      strength = "Medium Strength 👀";
-    } else {
-      strength = "Too Weak 😢";
-    }
+fetch(API + "/api/signup",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+name:document.getElementById("name").value,
+email:document.getElementById("email").value,
+password:document.getElementById("password").value,
+dob:document.getElementById("dob").value,
+gender:document.getElementById("gender").value
+})
+})
+.then(res=>res.json())
+.then(data=>{
+document.getElementById("result").innerText=JSON.stringify(data)
+})
 
-    strengthText.textContent = strength;
-  }
+}
 
-  function handleSubmit() {
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-    const confirmPass = document.getElementById("confirm-password").value;
+function verify(){
 
-    if (isSignup && pass !== confirmPass) {
-      alert("Passwords do not match!");
-      return;
-    }
+fetch(API + "/api/verify",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+email:document.getElementById("otp_email").value,
+otp:document.getElementById("otp").value
+})
+})
+.then(res=>res.json())
+.then(data=>{
+document.getElementById("result").innerText=JSON.stringify(data)
+})
 
-    if (!email || !pass) {
-      alert("Please fill all fields!");
-      return;
-    }
+}
 
-    alert(isSignup ? "Account Created 🎉" : "Welcome Back! 👋");
-  }
+function login(){
+
+fetch(API + "/api/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+email:document.getElementById("login_email").value,
+password:document.getElementById("login_password").value
+})
+})
+.then(res=>res.json())
+.then(data=>{
+document.getElementById("result").innerText=JSON.stringify(data)
+})
+
+}
+
+function googleLogin(){
+
+window.location.href = API + "/api/google-login"
+
+}
+
 </script>
 
 </body>
